@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Shop{% endblock %}
+
+{% block header %}
+    <h1>Shop</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Magic Card Packs</h2>
+            <p>Discover the latest Magic: The Gathering booster packs and sets</p>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="card h-100 bg-dark text-white">
+                <img src="{{ url_for('static', filename='img/' + product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.cards_per_pack }} Cards per Pack</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fs-4">${{ product.price }}</span>
+                        <form action="{{ url_for('shop.add_to_cart', product_id=product.id) }}" method="post">
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

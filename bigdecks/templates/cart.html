@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% block header %}
+    <h1>Shopping Cart</h1>
+{% endblock %}
+
+{% block content %}
+<style>
+  .quantity-control {
+    display: flex;
+    align-items: center;
+  }
+  
+  .quantity-control button {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  .quantity-control span {
+    min-width: 36px;
+    text-align: center;
+  }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            {% if cart_items %}
+                {% for item in cart_items %}
+                <div class="card mb-3 bg-dark text-white">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h5>{{ item.name }}</h5>
+                                <div class="mt-2">
+                                    <span>Quantity: </span>
+                                    <div class="quantity-control">
+                                        <form action="{{ url_for('shop.update_cart', product_id=item.id) }}" method="post" class="d-inline">
+                                            <input type="hidden" name="action" value="decrease">
+                                            <button type="submit" class="btn btn-outline-light">-</button>
+                                        </form>
+                                        <span class="px-2">{{ item.quantity }}</span>
+                                        <form action="{{ url_for('shop.update_cart', product_id=item.id) }}" method="post" class="d-inline">
+                                            <input type="hidden" name="action" value="increase">
+                                            <button type="submit" class="btn btn-outline-light">+</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-md-end">
+                                <p>Price: ${{ item.price }}</p>
+                                <p>Subtotal: ${{ "%.2f"|format(item.subtotal) }}</p>
+                            </div>
+                            <div class="col-md-3 text-md-end">
+                                <form action="{{ url_for('shop.update_cart', product_id=item.id) }}" method="post">
+                                    <input type="hidden" name="action" value="remove">
+                                    <button type="submit" class="btn btn-danger">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <div class="mt-4 text-end">
+                    <h4>Total: ${{ "%.2f"|format(total) }}</h4>
+                    <a href="#" class="btn btn-success btn-lg mt-2">Proceed to Checkout</a>
+                </div>
+            {% else %}
+                <div class="text-center my-5">
+                    <h3>Your cart is empty</h3>
+                    <p>Browse our shop to find amazing card packs!</p>
+                    <a href="{{ url_for('shop.index') }}" class="btn btn-primary mt-3">Continue Shopping</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
